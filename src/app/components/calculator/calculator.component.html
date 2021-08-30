@@ -1,0 +1,7 @@
+<form [formGroup]="calculatorForm">
+  <input formControlName="expression" />
+  <button type="submit" [disabled]="!calculatorForm.valid">Calculate</button>
+  <!-- <button>Reset</button> -->
+</form>
+<h2>Result:</h2>
+<p>{{ result }}</p>
