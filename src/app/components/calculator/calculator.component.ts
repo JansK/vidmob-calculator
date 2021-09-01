@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Evaluator } from 'src/app/models/Evaluator';
+import { Evaluator } from 'src/app/models/calculator/Evaluator';
 
 @Component({
   selector: 'app-calculator',
@@ -28,6 +28,8 @@ export class CalculatorComponent implements OnInit {
   }
 
   onSubmit() {
-    this.result = this.evaluator.evaluate(this.calculatorForm.value);
+    this.result = this.evaluator.evaluate(
+      this.calculatorForm.get('expression')?.value
+    );
   }
 }

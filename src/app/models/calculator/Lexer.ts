@@ -1,24 +1,23 @@
 import { Token } from './Token';
-import { TokenType } from './TokenType';
+import { TokenType } from '../../enums/TokenType';
 
 export class Lexer {
   expression = '';
   length = 0;
   index = 0;
   marker = 0;
-  tokenType = new TokenType();
 
   constructor() {}
 
   peekNextChar(this: any) {
     let idx = this.index;
-    return idx < length ? this.expression.charAt(idx) : '\x00';
+    return idx < this.length ? this.expression.charAt(idx) : '\x00';
   }
 
   getNextChar() {
     let ch = '\x00',
       idx = this.index;
-    if (idx < length) {
+    if (idx < this.length) {
       ch = this.expression.charAt(idx);
       this.index += 1;
     }
@@ -44,7 +43,7 @@ export class Lexer {
   skipSpaces() {
     let ch;
 
-    while (this.index < length) {
+    while (this.index < this.length) {
       ch = this.peekNextChar();
       if (!this.isWhiteSpace(ch)) {
         break;
@@ -55,8 +54,8 @@ export class Lexer {
 
   scanOperator() {
     let ch = this.peekNextChar();
-    if ('+-*/()^%=;,'.indexOf(ch) >= 0) {
-      return this.createToken(this.tokenType.Operator, this.getNextChar());
+    if ('+-*/()'.indexOf(ch) >= 0) {
+      return this.createToken(TokenType.Operator, this.getNextChar());
     }
     return undefined;
   }
@@ -86,7 +85,7 @@ export class Lexer {
       id += this.getNextChar();
     }
 
-    return this.createToken(this.tokenType.Identifier, id);
+    return this.createToken(TokenType.Identifier, id);
   }
 
   scanNumber() {
@@ -120,37 +119,37 @@ export class Lexer {
       }
     }
 
-    if (ch === 'e' || ch === 'E') {
-      number += this.getNextChar();
-      ch = this.peekNextChar();
-      if (ch === '+' || ch === '-' || this.isDecimalDigit(ch)) {
-        number += this.getNextChar();
-        while (true) {
-          ch = this.peekNextChar();
-          if (!this.isDecimalDigit(ch)) {
-            break;
-          }
-          number += this.getNextChar();
-        }
-      } else {
-        ch = 'character ' + ch;
-        if (this.index >= length) {
-          ch = '<end>';
-        }
-        throw new SyntaxError('Unexpected ' + ch + ' after the exponent sign');
-      }
-    }
+    // if (ch === 'e' || ch === 'E') {
+    //   number += this.getNextChar();
+    //   ch = this.peekNextChar();
+    //   if (ch === '+' || ch === '-' || this.isDecimalDigit(ch)) {
+    //     number += this.getNextChar();
+    //     while (true) {
+    //       ch = this.peekNextChar();
+    //       if (!this.isDecimalDigit(ch)) {
+    //         break;
+    //       }
+    //       number += this.getNextChar();
+    //     }
+    //   } else {
+    //     ch = 'character ' + ch;
+    //     if (this.index >= this.length) {
+    //       ch = '<end>';
+    //     }
+    //     throw new SyntaxError('Unexpected ' + ch + ' after the exponent sign');
+    //   }
+    // }
 
     if (number === '.') {
       throw new SyntaxError('Expecting decimal digits after the dot sign');
     }
 
-    return this.createToken(this.tokenType.Number, number);
+    return this.createToken(TokenType.Number, number);
   }
 
   reset(str: string) {
     this.expression = str;
-    length = str.length;
+    this.length = str.length;
     this.index = 0;
   }
 
@@ -158,11 +157,13 @@ export class Lexer {
     let token;
 
     this.skipSpaces();
-    if (this.index >= length) {
-      // return undefined;
-      throw new SyntaxError(
-        'Unknown token from character ' + this.peekNextChar()
-      );
+    // problem is happening here
+    // as well as issue of returning undefined
+    if (this.index >= this.length) {
+      return undefined;
+      // throw new SyntaxError(
+      //   'Unknown token from character ' + this.peekNextChar()
+      // );
     }
 
     this.marker = this.index;
@@ -177,10 +178,10 @@ export class Lexer {
       return token;
     }
 
-    // token = this.scanIdentifier();
-    // if (typeof token !== 'undefined') {
-    //   return token;
-    // }
+    token = this.scanIdentifier();
+    if (typeof token !== 'undefined') {
+      return token;
+    }
 
     throw new SyntaxError(
       'Unknown token from character ' + this.peekNextChar()
@@ -191,24 +192,16 @@ export class Lexer {
     let token, idx;
 
     idx = this.index;
-    try {
-      token = this.next();
+
+    token = this.next();
+    if (typeof token !== 'undefined') {
       delete token.start;
       delete token.end;
-    } catch (e) {
-      // token = undefined;
-      throw new SyntaxError(
-        'Unknown token from character ' + this.peekNextChar()
-      );
+    } else {
+      token = undefined;
     }
     this.index = idx;
 
     return token;
   }
-
-  // return {
-  //   reset: reset,
-  //   next: next,
-  //   peek: peek,
-  // };
 }

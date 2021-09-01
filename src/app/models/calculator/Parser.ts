@@ -1,18 +1,18 @@
+import { Expression } from './Expression';
 import { Lexer } from './Lexer';
 import { Token } from './Token';
-import { TokenType } from './TokenType';
+import { TokenType } from '../../enums/TokenType';
 
 export class Parser {
   lexer = new Lexer();
-  tokenType = new TokenType();
 
   constructor() {}
 
-  matchOp(token: Token, op: string) {
+  matchOp(token: Token | undefined, op: string) {
     return (
       typeof token !== 'undefined' &&
-      token.type === this.tokenType.Operator &&
-      token.value === op
+      token.getType() === TokenType.Operator &&
+      token.getValue() === op
     );
   }
 
@@ -82,21 +82,21 @@ export class Parser {
       throw new SyntaxError('Unexpected termination of expression');
     }
 
-    if (token.type === this.tokenType.Identifier) {
+    if (token.getType() === TokenType.Identifier) {
       token = this.lexer.next();
       if (this.matchOp(this.lexer.peek(), '(')) {
-        return this.parseFunctionCall(token.value);
+        return this.parseFunctionCall(token!.getValue());
       } else {
         return {
-          Identifier: token.value,
+          Identifier: token!.getValue(),
         };
       }
     }
 
-    if (token.type === this.tokenType.Number) {
+    if (token.getType() === TokenType.Number) {
       token = this.lexer.next();
       return {
-        Number: token.value,
+        Number: token!.getValue(),
       };
     }
 
@@ -112,7 +112,9 @@ export class Parser {
       };
     }
 
-    throw new SyntaxError('Parse error, can not process token ' + token.value);
+    throw new SyntaxError(
+      'Parse error, can not process token ' + token.getValue()
+    );
   }
 
   // Unary ::= Primary |
@@ -121,12 +123,25 @@ export class Parser {
     let token, expr;
 
     token = this.lexer.peek();
-    if (this.matchOp(token, '-') || this.matchOp(token, '+')) {
+    // if (this.matchOp(token, '-') || this.matchOp(token, '+')) {
+    if (this.matchOp(token, '-')) {
       token = this.lexer.next();
       expr = this.parseUnary();
+      if (this.matchOp(token, '-') && expr?.Unary?.operator === '+') {
+        throw new SyntaxError(
+          'Cannot have more than 2 operators in series where the 2nd operator is not -'
+        );
+      }
+      if (
+        token?.getType() === TokenType.Operator &&
+        expr?.Unary?.operator &&
+        expr?.Unary?.expression?.Unary?.operator
+      ) {
+        throw new SyntaxError('Cannot have 3 operators in a row');
+      }
       return {
         Unary: {
-          operator: token.value,
+          operator: token!.getValue(),
           expression: expr,
         },
       };
@@ -147,7 +162,7 @@ export class Parser {
       token = this.lexer.next();
       expr = {
         Binary: {
-          operator: token.value,
+          operator: token!.getValue(),
           left: expr,
           right: this.parseUnary(),
         },
@@ -161,15 +176,26 @@ export class Parser {
   //              Additive '+' Multiplicative |
   //              Additive '-' Multiplicative
   parseAdditive() {
-    let expr, token;
+    let expr;
+    let token: Token | undefined;
 
     expr = this.parseMultiplicative();
     token = this.lexer.peek();
     while (this.matchOp(token, '+') || this.matchOp(token, '-')) {
       token = this.lexer.next();
+      if (
+        token?.getType() === TokenType.Operator &&
+        expr?.Binary.right?.Unary.operator &&
+        expr?.Binary.right?.Unary.expression
+      ) {
+        throw new SyntaxError(
+          // 'Cannot have more than 2 operators in series where the 2nd operator is not -'
+          'test'
+        );
+      }
       expr = {
         Binary: {
-          operator: token.value,
+          operator: token!.getValue(),
           left: expr,
           right: this.parseMultiplicative(),
         },
@@ -216,7 +242,7 @@ export class Parser {
 
     token = this.lexer.next();
     if (typeof token !== 'undefined') {
-      throw new SyntaxError('Unexpected token ' + token.value);
+      throw new SyntaxError('Unexpected token ' + token.getValue());
     }
 
     return {

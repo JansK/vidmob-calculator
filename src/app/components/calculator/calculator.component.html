@@ -1,7 +1,7 @@
-<form [formGroup]="calculatorForm">
+<form [formGroup]="calculatorForm" (ngSubmit)="onSubmit()">
   <input formControlName="expression" />
   <button type="submit" [disabled]="!calculatorForm.valid">Calculate</button>
-  <!-- <button>Reset</button> -->
+  <button type="reset">Reset</button>
 </form>
 <h2>Result:</h2>
 <p>{{ result }}</p>
