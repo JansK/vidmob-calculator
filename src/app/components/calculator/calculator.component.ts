@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Evaluator } from 'src/app/models/calculator/Evaluator';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Evaluator } from 'src/app/models/calculator.logic/Evaluator';
+import { OutPutItem } from 'src/app/models/outputItem';
+import { OutputRowComponent } from '../output-row/output-row.component';
 
 @Component({
   selector: 'app-calculator',
@@ -10,26 +12,45 @@ import { Evaluator } from 'src/app/models/calculator/Evaluator';
 export class CalculatorComponent implements OnInit {
   input = '';
   calculatorForm = new FormGroup({
-    equation: new FormControl(''),
+    equation: new FormControl('', Validators.required),
   });
   evaluator = new Evaluator();
-  result: any;
+  outputRows: OutPutItem[] = [];
 
-  constructor() {}
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
-  ngOnInit(): void {
-    this.initializeForm();
-  }
+  ngOnInit(): void {}
 
-  initializeForm() {
-    this.calculatorForm = new FormGroup({
-      expression: new FormControl(''),
-    });
+  get equation() {
+    return this.calculatorForm.get('equation');
   }
 
   onSubmit() {
-    this.result = this.evaluator.evaluate(
-      this.calculatorForm.get('expression')?.value
-    );
+    this.destroyOutputRows();
+    try {
+      this.createOutputRow(
+        'Result',
+        this.evaluator.evaluate(this.calculatorForm.get('equation')?.value)
+      );
+    } catch (err) {
+      if (err && err.message) {
+        // this.result = `${err.message} at character ${err.index}`;
+        this.createOutputRow(
+          'Error',
+          `${err.message} at character ${err.index}`
+        );
+      } else {
+        // this.result = 'There was an error parsing your input';
+        this.createOutputRow('Error', `There was an error parsing your input`);
+      }
+    }
+  }
+
+  createOutputRow(title: string, content: string) {
+    this.outputRows.push(new OutPutItem(title, content));
+  }
+
+  destroyOutputRows() {
+    this.outputRows = [];
   }
 }

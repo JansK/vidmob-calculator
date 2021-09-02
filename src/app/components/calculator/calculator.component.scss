@@ -1,0 +1,62 @@
+@import "./../../styles/base/fonts";
+@import "./../../styles/base/colors";
+@import "./../../styles/components/buttons";
+
+.calculator-wrapper {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16em;
+
+  h1 {
+    font-family: $font-primary;
+    font-size: clamp(2em, 2.75vw, 6em);
+  }
+
+  .calculator-form-wrapper {
+    display: grid;
+    width: auto;
+    grid-template-columns: 0.75fr 0.25fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas:
+      "input input"
+      "calculate reset"
+      "validation validation";
+    gap: 1em;
+
+    .equation-input {
+      grid-area: input;
+      width: clamp(10em, 50vw, 30vw);
+      height: 1.5em;
+      font-size: 2em;
+      font-family: $font-accent;
+      border-color: $color-accent;
+      border-width: 1.5px;
+      box-shadow: 0 0 0 3px $color-primary;
+      border-radius: 5px;
+    }
+
+    .calculate-button {
+      grid-area: calculate;
+      font-size: 1.5em;
+    }
+
+    .reset-button {
+      grid-area: reset;
+      font-size: 1.5em;
+    }
+
+    .form-validation {
+      grid-area: validation;
+    }
+  }
+
+  .result-section {
+    width: clamp(10em, 30vw, 30vw);
+    box-shadow: 0 0 10px 0 rgba(204, 204, 204, 0.5),
+      0 0 1px 0 rgba(204, 204, 204, 0.5);
+    border-radius: 5px;
+  }
+}

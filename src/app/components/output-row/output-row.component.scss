@@ -1,0 +1,29 @@
+@import "./../../styles/base/fonts";
+@import "./../../styles/base/colors";
+
+.output-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: inherit;
+  // border-radius: 5px;
+
+  .output-title {
+    width: clamp(10em, 30vw, 30vw);
+    padding-left: 1em;
+    background: $white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  .output-content {
+    width: inherit;
+    padding: 1em;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    p {
+      margin: 0;
+    }
+  }
+}

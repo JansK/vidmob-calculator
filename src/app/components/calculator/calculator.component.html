@@ -1,7 +1,36 @@
-<form [formGroup]="calculatorForm" (ngSubmit)="onSubmit()">
-  <input formControlName="expression" />
-  <button type="submit" [disabled]="!calculatorForm.valid">Calculate</button>
-  <button type="reset">Reset</button>
-</form>
-<h2>Result:</h2>
-<p>{{ result }}</p>
+<div class="calculator-wrapper">
+  <h1>Enter your equation below:</h1>
+  <form
+    [formGroup]="calculatorForm"
+    (ngSubmit)="onSubmit()"
+    class="calculator-form-wrapper"
+  >
+    <input
+      class="equation-input"
+      type="text"
+      id="equation"
+      required
+      formControlName="equation"
+    />
+    <button class="btn-primary calculate-button" type="submit">
+      Calculate
+    </button>
+    <button class="btn-reset reset-button" type="reset">Reset</button>
+
+    <div
+      *ngIf="equation?.invalid && (equation?.dirty || equation?.touched)"
+      class="form-validation"
+    >
+      <div *ngIf="equation?.errors?.required">An equation is required</div>
+    </div>
+  </form>
+
+  <div class="result-section">
+    <div *ngFor="let outputRow of outputRows">
+      <output-row
+        [title]="outputRow.title"
+        [content]="outputRow.content"
+      ></output-row>
+    </div>
+  </div>
+</div>

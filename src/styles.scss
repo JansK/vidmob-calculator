@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./app/styles/base/colors";
+@import "./app/styles/base/fonts";
+
+* {
+  box-sizing: border-box;
+}
+
+* + * {
+  margin-bottom: 0;
+}
+
+body {
+  margin: 0;
+  background: $off-white;
+}
+
+h1,
+h2,
+h3 {
+  font-family: $font-primary;
+}
+
+p {
+  font-family: $font-accent;
+}
