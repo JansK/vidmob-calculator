@@ -51,16 +51,8 @@ export class Evaluator {
   }
 
   evaluate(expr: string) {
-    let tree = null;
-    try {
-      tree = this.parser.parse(expr);
-    } catch (err) {
-      if (err && err.message) {
-        return err.message;
-      } else {
-        return 'There was an error parsing your input';
-      }
-    }
+    let tree = this.parser.parse(expr);
+
     return this.exec(tree);
   }
 }

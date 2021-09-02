@@ -1,5 +1,6 @@
 import { Token } from './Token';
 import { TokenType } from '../../enums/TokenType';
+import { ParsingError } from '../calculator.error/ParsingError';
 
 export class Lexer {
   expression = '';
@@ -119,29 +120,11 @@ export class Lexer {
       }
     }
 
-    // if (ch === 'e' || ch === 'E') {
-    //   number += this.getNextChar();
-    //   ch = this.peekNextChar();
-    //   if (ch === '+' || ch === '-' || this.isDecimalDigit(ch)) {
-    //     number += this.getNextChar();
-    //     while (true) {
-    //       ch = this.peekNextChar();
-    //       if (!this.isDecimalDigit(ch)) {
-    //         break;
-    //       }
-    //       number += this.getNextChar();
-    //     }
-    //   } else {
-    //     ch = 'character ' + ch;
-    //     if (this.index >= this.length) {
-    //       ch = '<end>';
-    //     }
-    //     throw new SyntaxError('Unexpected ' + ch + ' after the exponent sign');
-    //   }
-    // }
-
     if (number === '.') {
-      throw new SyntaxError('Expecting decimal digits after the dot sign');
+      throw new ParsingError(
+        'Expecting decimal digits after the dot sign',
+        this.index
+      );
     }
 
     return this.createToken(TokenType.Number, number);
@@ -157,13 +140,8 @@ export class Lexer {
     let token;
 
     this.skipSpaces();
-    // problem is happening here
-    // as well as issue of returning undefined
     if (this.index >= this.length) {
       return undefined;
-      // throw new SyntaxError(
-      //   'Unknown token from character ' + this.peekNextChar()
-      // );
     }
 
     this.marker = this.index;
@@ -183,8 +161,9 @@ export class Lexer {
       return token;
     }
 
-    throw new SyntaxError(
-      'Unknown token from character ' + this.peekNextChar()
+    throw new ParsingError(
+      'Unknown token from character ' + this.peekNextChar(),
+      this.index
     );
   }
 

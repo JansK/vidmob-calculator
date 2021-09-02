@@ -2,6 +2,7 @@ import { Expression } from './Expression';
 import { Lexer } from './Lexer';
 import { Token } from './Token';
 import { TokenType } from '../../enums/TokenType';
+import { ParsingError } from '../calculator.error/ParsingError';
 
 export class Parser {
   lexer = new Lexer();
@@ -48,7 +49,10 @@ export class Parser {
 
     token = this.lexer.next();
     if (!this.matchOp(token, '(')) {
-      throw new SyntaxError('Expecting ( in a call "' + name + '"');
+      throw new ParsingError(
+        'Expecting ( in a call "' + name + '"',
+        this.lexer.index
+      );
     }
 
     token = this.lexer.peek();
@@ -58,7 +62,10 @@ export class Parser {
 
     token = this.lexer.next();
     if (!this.matchOp(token, ')')) {
-      throw new SyntaxError('Expecting ) in a call "' + name + '"');
+      throw new ParsingError(
+        'Expecting ) in a call "' + name + '"',
+        this.lexer.index
+      );
     }
 
     return {
@@ -79,7 +86,10 @@ export class Parser {
     token = this.lexer.peek();
 
     if (typeof token === 'undefined') {
-      throw new SyntaxError('Unexpected termination of expression');
+      throw new ParsingError(
+        'Unexpected termination of expression',
+        this.lexer.index
+      );
     }
 
     if (token.getType() === TokenType.Identifier) {
@@ -105,15 +115,16 @@ export class Parser {
       expr = this.parseAssignment();
       token = this.lexer.next();
       if (!this.matchOp(token, ')')) {
-        throw new SyntaxError('Expecting )');
+        throw new ParsingError('Expecting )', this.lexer.index);
       }
       return {
         Expression: expr,
       };
     }
 
-    throw new SyntaxError(
-      'Parse error, can not process token ' + token.getValue()
+    throw new ParsingError(
+      'Parse error, can not process token ' + token.getValue(),
+      this.lexer.index
     );
   }
 
@@ -128,8 +139,9 @@ export class Parser {
       token = this.lexer.next();
       expr = this.parseUnary();
       if (this.matchOp(token, '-') && expr?.Unary?.operator === '+') {
-        throw new SyntaxError(
-          'Cannot have more than 2 operators in series where the 2nd operator is not -'
+        throw new ParsingError(
+          'Cannot have more than 2 operators in series where the 2nd operator is not -',
+          this.lexer.index
         );
       }
       if (
@@ -137,7 +149,10 @@ export class Parser {
         expr?.Unary?.operator &&
         expr?.Unary?.expression?.Unary?.operator
       ) {
-        throw new SyntaxError('Cannot have 3 operators in a row');
+        throw new ParsingError(
+          'Cannot have 3 operators in a row',
+          this.lexer.index
+        );
       }
       return {
         Unary: {
@@ -183,16 +198,20 @@ export class Parser {
     token = this.lexer.peek();
     while (this.matchOp(token, '+') || this.matchOp(token, '-')) {
       token = this.lexer.next();
-      if (
-        token?.getType() === TokenType.Operator &&
-        expr?.Binary.right?.Unary.operator &&
-        expr?.Binary.right?.Unary.expression
-      ) {
-        throw new SyntaxError(
-          // 'Cannot have more than 2 operators in series where the 2nd operator is not -'
-          'test'
-        );
-      }
+      // if (
+      //   token?.getType() === TokenType.Operator &&
+      //   expr?.Binary.right?.Unary.operator &&
+      //   expr?.Binary.right?.Unary?.expression
+      // ) {
+      //   throw (
+      //     (new ParsingError(
+      //       // 'Cannot have more than 2 operators in series where the 2nd operator is not -'
+      //       'test',
+      //       this.lexer.index
+      //     ),
+      //     this.lexer.index)
+      //   );
+      // }
       expr = {
         Binary: {
           operator: token!.getValue(),
@@ -242,7 +261,10 @@ export class Parser {
 
     token = this.lexer.next();
     if (typeof token !== 'undefined') {
-      throw new SyntaxError('Unexpected token ' + token.getValue());
+      throw new ParsingError(
+        'Unexpected token ' + token.getValue(),
+        this.lexer.index
+      );
     }
 
     return {
