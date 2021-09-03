@@ -4,6 +4,10 @@ import { Token } from './Token';
 import { TokenType } from '../../enums/TokenType';
 import { ParsingError } from '../calculator.error/ParsingError';
 
+/**
+ * The Parser class takes the tokens created from the Lexer,
+ * evaluates their syntax, and adds it to the syntax tree accordingly
+ */
 export class Parser {
   lexer = new Lexer();
 
@@ -27,7 +31,6 @@ export class Parser {
     while (true) {
       expr = this.parseExpression();
       if (typeof expr === 'undefined') {
-        // TODO maybe throw exception?
         break;
       }
       args.push(expr);
@@ -86,10 +89,7 @@ export class Parser {
     token = this.lexer.peek();
 
     if (typeof token === 'undefined') {
-      throw new ParsingError(
-        'Unexpected termination of expression',
-        this.lexer.index
-      );
+      throw new ParsingError('Unexpected end of expression', this.lexer.index);
     }
 
     if (token.getType() === TokenType.Identifier) {
@@ -123,7 +123,7 @@ export class Parser {
     }
 
     throw new ParsingError(
-      'Parse error, can not process token ' + token.getValue(),
+      'Parsing error, could not process character ' + token.getValue(),
       this.lexer.index
     );
   }
@@ -198,20 +198,7 @@ export class Parser {
     token = this.lexer.peek();
     while (this.matchOp(token, '+') || this.matchOp(token, '-')) {
       token = this.lexer.next();
-      // if (
-      //   token?.getType() === TokenType.Operator &&
-      //   expr?.Binary.right?.Unary.operator &&
-      //   expr?.Binary.right?.Unary?.expression
-      // ) {
-      //   throw (
-      //     (new ParsingError(
-      //       // 'Cannot have more than 2 operators in series where the 2nd operator is not -'
-      //       'test',
-      //       this.lexer.index
-      //     ),
-      //     this.lexer.index)
-      //   );
-      // }
+
       expr = {
         Binary: {
           operator: token!.getValue(),
@@ -219,6 +206,17 @@ export class Parser {
           right: this.parseMultiplicative(),
         },
       };
+      if (
+        token?.getType() === TokenType.Operator &&
+        expr?.Binary.right?.Unary &&
+        expr?.Binary.right?.Unary.operator &&
+        expr?.Binary.right?.Unary?.expression?.Unary?.operator
+      ) {
+        throw new ParsingError(
+          'Cannot have 3 operators in a row',
+          this.lexer.index - 2
+        );
+      }
       token = this.lexer.peek();
     }
     return expr;
@@ -262,7 +260,7 @@ export class Parser {
     token = this.lexer.next();
     if (typeof token !== 'undefined') {
       throw new ParsingError(
-        'Unexpected token ' + token.getValue(),
+        'Unexpected character ' + token.getValue(),
         this.lexer.index
       );
     }
@@ -271,8 +269,4 @@ export class Parser {
       Expression: expr,
     };
   }
-
-  // return {
-  //   parse: parse,
-  // };
 }

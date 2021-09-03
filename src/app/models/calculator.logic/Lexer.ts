@@ -2,6 +2,10 @@ import { Token } from './Token';
 import { TokenType } from '../../enums/TokenType';
 import { ParsingError } from '../calculator.error/ParsingError';
 
+/**
+ * The Lexer class takes each character in the equation and
+ * creates the appropriate token (Number, Operator, or Identifier)
+ */
 export class Lexer {
   expression = '';
   length = 0;
@@ -136,6 +140,7 @@ export class Lexer {
     this.index = 0;
   }
 
+  // Scans the next character in the equation and creates the appropriate token
   next() {
     let token;
 
@@ -167,6 +172,7 @@ export class Lexer {
     );
   }
 
+  // Looks at the character that comes after the token currently being evaluated
   peek() {
     let token, idx;
 

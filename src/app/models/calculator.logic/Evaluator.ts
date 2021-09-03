@@ -1,5 +1,9 @@
 import { Parser } from './Parser';
 
+/**
+ * The Evaluator class is an interpreter that computes
+ * the result of the syntax tree returned from the parser
+ */
 export class Evaluator {
   parser = new Parser();
 

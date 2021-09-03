@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Output } from '../../interfaces/output';
 
 /*
- *   Component to handle the output of CalculatorComponent.
+ *   Component to display the output of CalculatorComponent.
  *
  */
 @Component({

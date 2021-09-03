@@ -38,11 +38,15 @@
     bottom: 100%;
     left: 50%;
     margin-left: -8vw; // this value doesn't work for mobile sizes, would need more time to figure out correct way to do this
+
+    opacity: 0;
+    transition: opacity 1s;
   }
 
   .tooltip:hover .tooltiptext,
   .tooltip:active .tooltiptext {
     visibility: visible;
+    opacity: 1;
   }
 
   .calculator-form-wrapper {
