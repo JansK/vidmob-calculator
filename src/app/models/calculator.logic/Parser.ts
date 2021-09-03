@@ -12,6 +12,8 @@ import { ParsingError } from '../calculator.error/ParsingError';
  * I have performed modifications where necessary to have the
  * syntactic analysis work within the constraints set out
  * by the exercise requirements.
+ *
+ * Also, ideally this logic would be unit tested but didn't have the time to do so
  */
 export class Parser {
   lexer = new Lexer();
