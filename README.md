@@ -1,27 +1,49 @@
-# Calculator
+# Vidmob Calculator
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
+Hello to whomever is reviewing this project! If you have any questions, feel free to reach out to me via my email at kmjanssen1@gmail.com. Otherise, have a good day!
 
-## Development server
+This project is a calculator that supports...
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- the +, -, \*, and / operations
+- positive, negative, and decimal numbers
+- parentheses with multiple levels
 
-## Code scaffolding
+## Before Using
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Please make sure you have the following installed:
 
-## Build
+- Node.js
+  - Visit https://nodejs.org/en/ to install
+- npm package manager
+- Angular CLI
+  - This can be installed by running the following command `npm install -g @angular/cli`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Usage
 
-## Running unit tests
+### Running The Project
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. To start the project, navigate to the root directory of the cloned calculator repo .../calculator in command line
+2. Run the `ng serve` command
+3. This will spin up the local instance, which can be accessing by going to `http://localhost:4200/` in your browser of choice
+4. After navigating to `http://localhost:4200/`, you should see the calculator user interface with an input for equations, and a calculate and reset button.
 
-## Running end-to-end tests
+### Using the Calculator
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+To evaluate your equation:
 
-## Further help
+1. Enter your equation into the input box
+2. Click the Calculate button
+3. The result will be displayed below the Calculate and Reset buttons
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Assumptions
+
+1. The longest equation that is supported is 255 characters. I received this guidance from Christopher Warren
+2. The equation output will not exceed the maximum & minimum supported integers in JavaScript (9007199254740991 & -9007199254740991)
+3. Having numbers next to parentheses does not qualify as a multiplication operation
+
+- For example, `3(4)` will not multiply 3 times 4. It will instead be considered invalid syntax
+- An example of an equivalent operation with valid syntax would be `3*(4)`
+
+#### Testing
+
+If you want to look at just the units tests by themselves, you can run the `ng test` command inside the root directory. This will run the tests and launch a browser window that will display the output.

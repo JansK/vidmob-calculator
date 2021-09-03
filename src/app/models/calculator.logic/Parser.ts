@@ -1,4 +1,3 @@
-import { Expression } from './Expression';
 import { Lexer } from './Lexer';
 import { Token } from './Token';
 import { TokenType } from '../../enums/TokenType';
@@ -7,6 +6,12 @@ import { ParsingError } from '../calculator.error/ParsingError';
 /**
  * The Parser class takes the tokens created from the Lexer,
  * evaluates their syntax, and adds it to the syntax tree accordingly
+ *
+ * Please note the core of this logic was taken from Ariya Hidayat
+ * at the following repo, https://github.com/ariya/tapdigit.
+ * I have performed modifications where necessary to have the
+ * syntactic analysis work within the constraints set out
+ * by the exercise requirements.
  */
 export class Parser {
   lexer = new Lexer();
@@ -150,8 +155,8 @@ export class Parser {
         expr?.Unary?.expression?.Unary?.operator
       ) {
         throw new ParsingError(
-          'Cannot have 3 operators in a row',
-          this.lexer.index
+          'More than 2 operators in series',
+          this.lexer.index - 1
         );
       }
       return {
@@ -213,8 +218,8 @@ export class Parser {
         expr?.Binary.right?.Unary?.expression?.Unary?.operator
       ) {
         throw new ParsingError(
-          'Cannot have 3 operators in a row',
-          this.lexer.index - 2
+          'More than 2 operators in series',
+          this.lexer.index - 1
         );
       }
       token = this.lexer.peek();

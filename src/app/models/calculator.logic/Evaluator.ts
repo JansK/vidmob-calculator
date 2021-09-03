@@ -3,12 +3,19 @@ import { Parser } from './Parser';
 /**
  * The Evaluator class is an interpreter that computes
  * the result of the syntax tree returned from the parser
+ *
+ * Please note the core of this logic was taken from Ariya Hidayat
+ * at the following repo, https://github.com/ariya/tapdigit.
+ * I have performed modifications where necessary to have the
+ * syntactic analysis work within the constraints set out
+ * by the exercise requirements.
  */
 export class Evaluator {
   parser = new Parser();
 
   constructor() {}
 
+  // Recursively evaluates the syntax tree returned from the parser
   exec(node: any): any {
     let left, right, expr, args, i;
 

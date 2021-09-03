@@ -5,6 +5,12 @@ import { ParsingError } from '../calculator.error/ParsingError';
 /**
  * The Lexer class takes each character in the equation and
  * creates the appropriate token (Number, Operator, or Identifier)
+ *
+ * Please note the core of this logic was taken from Ariya Hidayat
+ * at the following repo, https://github.com/ariya/tapdigit.
+ * I have performed modifications where necessary to have the
+ * syntactic analysis work within the constraints set out
+ * by the exercise requirements.
  */
 export class Lexer {
   expression = '';
@@ -57,6 +63,7 @@ export class Lexer {
     }
   }
 
+  // Evaluates if the character is an operator
   scanOperator() {
     let ch = this.peekNextChar();
     if ('+-*/()'.indexOf(ch) >= 0) {
@@ -73,6 +80,7 @@ export class Lexer {
     return this.isIdentifierStart(ch) || this.isDecimalDigit(ch);
   }
 
+  // Evaluates if the character is an identifier
   scanIdentifier() {
     let ch, id;
 
@@ -93,6 +101,7 @@ export class Lexer {
     return this.createToken(TokenType.Identifier, id);
   }
 
+  // Evaluates if the character is a number
   scanNumber() {
     let ch, number;
 
