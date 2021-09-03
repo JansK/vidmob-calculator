@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { CalculatorComponent } from './calculator.component';
 import { OutputRowComponent } from '../output-row/output-row.component';
+import { Evaluator } from 'src/app/models/calculator.logic/Evaluator';
 
 /*
  *  CalculatorComponent Logic Tests
@@ -18,6 +19,8 @@ describe('CalculatorComponent Logic', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [CalculatorComponent],
+      imports: [Evaluator],
+      providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
     }).compileComponents();
   });
 
@@ -44,6 +47,19 @@ describe('CalculatorComponent Logic', () => {
     component.createOutputRow('test', 'test');
     component.destroyOutputRows();
     expect(component.outputRows.length).toEqual(0);
+  });
+
+  it('should create a successful OutputItem', () => {
+    const testTitle = 'Result';
+    const returnValue = '2';
+    const equation = '1+1';
+    const evaluatorSpy = jasmine.createSpyObj('Evaluator', ['evaluate']);
+    evaluatorSpy.evaluate.and.returnValue(returnValue);
+
+    component.createOutputRow(testTitle, returnValue);
+    expect(component.outputRows.length).toEqual(1);
+    expect(component.outputRows[0].title).toEqual(testTitle);
+    expect(component.outputRows[0].content).toEqual(returnValue);
   });
 });
 
