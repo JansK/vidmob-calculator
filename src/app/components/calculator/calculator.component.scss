@@ -15,6 +15,36 @@
     font-size: clamp(2em, 2.75vw, 6em);
   }
 
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    text-decoration: underline dotted $color-primary-light;
+  }
+
+  .tooltiptext {
+    visibility: hidden;
+    width: 262px;
+    background-color: $gray;
+    color: $white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: $font-accent;
+
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -8vw; // this value doesn't work for mobile sizes, would need more time to figure out correct way to do this
+  }
+
+  .tooltip:hover .tooltiptext,
+  .tooltip:active .tooltiptext {
+    visibility: visible;
+  }
+
   .calculator-form-wrapper {
     display: grid;
     width: auto;
@@ -25,6 +55,24 @@
       "calculate reset"
       "validation validation";
     gap: 1em;
+
+    .form-error-hightlight {
+      outline: 3px solid $color-danger;
+    }
+
+    .form-error-text {
+      color: $color-danger;
+      font-family: $font-accent;
+      font-size: 1.25em;
+    }
+
+    button:focus {
+      outline: 3px solid $color-accent;
+    }
+
+    input:focus {
+      outline: 3px solid $color-accent;
+    }
 
     .equation-input {
       grid-area: input;

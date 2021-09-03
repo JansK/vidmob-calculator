@@ -4,6 +4,10 @@
 button {
   font-family: $font-accent;
   border-radius: 5px;
+
+  :focus-visible {
+    outline: 3px solid $black;
+  }
 }
 
 .btn-primary {

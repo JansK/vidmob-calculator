@@ -1,5 +1,8 @@
 <div class="output-wrapper">
-  <div class="output-title">
+  <div
+    class="output-title"
+    [ngClass]="{ 'output-title-error': title === 'Error' }"
+  >
     <h3>{{ title }}</h3>
   </div>
   <div class="output-content">

@@ -1,5 +1,15 @@
 <div class="calculator-wrapper">
-  <h1>Enter your equation below:</h1>
+  <h1>
+    Enter your
+    <span class="tooltip"
+      >equation<span class="tooltiptext"
+        >An equation can only contain the following: numbers 0-9, +, -, *, /, .,
+        and ()</span
+      ></span
+    >
+    below
+  </h1>
+
   <form
     [formGroup]="calculatorForm"
     (ngSubmit)="onSubmit()"
@@ -11,6 +21,10 @@
       id="equation"
       required
       formControlName="equation"
+      [ngClass]="{
+        'form-error-hightlight':
+          equation?.invalid && (equation?.dirty || equation?.touched)
+      }"
     />
     <button class="btn-primary calculate-button" type="submit">
       Calculate
@@ -20,6 +34,10 @@
     <div
       *ngIf="equation?.invalid && (equation?.dirty || equation?.touched)"
       class="form-validation"
+      [ngClass]="{
+        'form-error-text':
+          equation?.invalid && (equation?.dirty || equation?.touched)
+      }"
     >
       <div *ngIf="equation?.errors?.required">An equation is required</div>
     </div>

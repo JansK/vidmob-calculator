@@ -2,15 +2,17 @@ import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Evaluator } from 'src/app/models/calculator.logic/Evaluator';
 import { OutPutItem } from 'src/app/models/outputItem';
-import { OutputRowComponent } from '../output-row/output-row.component';
 
+/*
+ *   Component to handle the input to the calculator logic and it's output.
+ *
+ */
 @Component({
   selector: 'app-calculator',
   templateUrl: './calculator.component.html',
   styleUrls: ['./calculator.component.scss'],
 })
 export class CalculatorComponent implements OnInit {
-  input = '';
   calculatorForm = new FormGroup({
     equation: new FormControl('', Validators.required),
   });
@@ -34,13 +36,11 @@ export class CalculatorComponent implements OnInit {
       );
     } catch (err) {
       if (err && err.message) {
-        // this.result = `${err.message} at character ${err.index}`;
         this.createOutputRow(
           'Error',
           `${err.message} at character ${err.index}`
         );
       } else {
-        // this.result = 'There was an error parsing your input';
         this.createOutputRow('Error', `There was an error parsing your input`);
       }
     }
