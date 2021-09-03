@@ -90,6 +90,10 @@
       border-radius: 5px;
     }
 
+    .disable-button {
+      cursor: not-allowed;
+    }
+
     .calculate-button {
       grid-area: calculate;
       font-size: 1.5em;

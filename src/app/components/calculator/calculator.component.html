@@ -20,13 +20,19 @@
       type="text"
       id="equation"
       required
+      maxlength="255"
       formControlName="equation"
       [ngClass]="{
         'form-error-hightlight':
           equation?.invalid && (equation?.dirty || equation?.touched)
       }"
     />
-    <button class="btn-primary calculate-button" type="submit">
+    <button
+      class="btn-primary calculate-button"
+      type="submit"
+      [disabled]="calculatorForm.invalid"
+      [ngClass]="{ 'disable-button': calculatorForm.invalid }"
+    >
       Calculate
     </button>
     <button class="btn-reset reset-button" type="reset">Reset</button>
