@@ -7,7 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { CalculatorComponent } from './calculator.component';
 import { OutputRowComponent } from '../output-row/output-row.component';
-import { Evaluator } from 'src/app/models/calculator.logic/Evaluator';
+import { ParsingError } from '../../models/calculator.error/ParsingError';
+import { EvaluationService } from 'src/app/services/evaluation.service';
 
 /*
  *  CalculatorComponent Logic Tests
@@ -15,13 +16,17 @@ import { Evaluator } from 'src/app/models/calculator.logic/Evaluator';
 describe('CalculatorComponent Logic', () => {
   let component: CalculatorComponent;
   let fixture: ComponentFixture<CalculatorComponent>;
+  let injectedEvaluationService: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [CalculatorComponent],
-      imports: [Evaluator],
-      providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
+      providers: [
+        { provide: ComponentFixtureAutoDetect, useValue: true },
+        EvaluationService,
+      ],
     }).compileComponents();
+    injectedEvaluationService = TestBed.get(EvaluationService);
   });
 
   beforeEach(() => {
@@ -51,15 +56,35 @@ describe('CalculatorComponent Logic', () => {
 
   it('should create a successful OutputItem', () => {
     const testTitle = 'Result';
-    const returnValue = '2';
-    const equation = '1+1';
-    const evaluatorSpy = jasmine.createSpyObj('Evaluator', ['evaluate']);
-    evaluatorSpy.evaluate.and.returnValue(returnValue);
+    const returnValue = 'Test';
+    spyOn(
+      EvaluationService.prototype as any,
+      'evaluateEquation'
+    ).and.returnValue(returnValue);
 
-    component.createOutputRow(testTitle, returnValue);
+    component.onSubmit();
     expect(component.outputRows.length).toEqual(1);
     expect(component.outputRows[0].title).toEqual(testTitle);
     expect(component.outputRows[0].content).toEqual(returnValue);
+  });
+
+  // Supposed to test error handling, ran into difficulties getting it to work
+  xit('should create an Error OutputItem', () => {
+    const error = new ParsingError('Test Error', 0);
+    spyOn(
+      EvaluationService.prototype as any,
+      'evaluateEquation'
+      // ).and.returnValue(new ParsingError('Test Error', 0));
+      // ).and.returnValue(error);
+      // ).and.rejectWith(error);
+    ).and.rejectWith(new ParsingError('Test Error', 0));
+
+    component.onSubmit();
+    expect(component.outputRows.length).toEqual(1);
+    expect(component.outputRows[0].title).toEqual('Error');
+    expect(component.outputRows[0].content).toEqual(
+      'Test Error at character 0'
+    );
   });
 });
 

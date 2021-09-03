@@ -29,6 +29,16 @@ describe('OutputRowComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should have a title section', () => {
+    expect(compiled.querySelector('.output-title').textContent).not.toBeNull();
+  });
+
+  it('should have a content section', () => {
+    expect(
+      compiled.querySelector('.output-content').textContent
+    ).not.toBeNull();
+  });
+
   it('should add error class', () => {
     component.title = 'Error';
     fixture.detectChanges();
