@@ -4,9 +4,7 @@ import { AppComponent } from './app.component';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      declarations: [AppComponent],
     }).compileComponents();
   });
 
@@ -22,10 +20,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('calculator');
   });
 
-  it('should render title', () => {
+  it('should contain calculator component', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('calculator app is running!');
+    expect(compiled.querySelector('app-calculator')).not.toBeNull();
   });
 });
