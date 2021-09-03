@@ -4,9 +4,8 @@ import { Evaluator } from 'src/app/models/calculator.logic/Evaluator';
 import { OutPutItem } from 'src/app/models/outputItem';
 import { EvaluationService } from '../../services/evaluation.service';
 
-/*
- *   Component to handle the input to the calculator logic and it's output.
- *
+/**
+ * Component to handle the input to the calculator logic and its output.
  */
 @Component({
   selector: 'app-calculator',
@@ -17,7 +16,6 @@ export class CalculatorComponent implements OnInit {
   calculatorForm = new FormGroup({
     equation: new FormControl('', Validators.required),
   });
-  evaluator = new Evaluator();
   outputRows: OutPutItem[] = [];
 
   constructor(private _evaluationService: EvaluationService) {}
