@@ -24,8 +24,8 @@ Please make sure you have the following installed:
 
 1. To start the project, navigate to the root directory of the cloned calculator repo .../calculator in command line
 2. Run the `ng serve` command
-3. This will spin up the local instance, which can be accessing by going to `http://localhost:4200/` in your browser of choice
-4. After navigating to `http://localhost:4200/`, you should see the calculator user interface with an input for equations, and a calculate and reset button.
+3. This will spin up the local instance, which can be accessing by going to http://localhost:4200/ in your browser of choice
+4. After navigating to http://localhost:4200/, you should see the calculator user interface with an input for equations, and a calculate and reset button.
 
 ### Using the Calculator
 
