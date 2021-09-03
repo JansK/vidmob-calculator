@@ -40,9 +40,8 @@ To evaluate your equation:
 1. The longest equation that is supported is 255 characters. I received this guidance from Christopher Warren
 2. The equation output will not exceed the maximum & minimum supported integers in JavaScript (9007199254740991 & -9007199254740991)
 3. Having numbers next to parentheses does not qualify as a multiplication operation
-
-- For example, `3(4)` will not multiply 3 times 4. It will instead be considered invalid syntax
-- An example of an equivalent operation with valid syntax would be `3*(4)`
+  - For example, `3(4)` will not multiply 3 times 4. It will instead be considered invalid syntax
+  - An example of an equivalent operation with valid syntax would be `3*(4)`
 
 #### Testing
 
